@@ -1,8 +1,18 @@
-from django.http import HttpResponse
+from django.shortcuts import render
+from .models import Entry
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    latest_blog_list = Entry.objects.order_by('-pub_date')[:5]
+    template = 'blogs/index.html'
+    context = {
+        'latest_blog_list': latest_blog_list,
+    }
+    return render(request, template, context)
 
 def detail(request, entry_id):
-    response = "You are looking at the detail of entry %s."
-    return HttpResponse(response % entry_id)
+    entry = Entry.objects.get(pk=entry_id)
+    template = 'blogs/detail.html'
+    context = {
+        'entry': entry,
+    }
+    return render(request, template, context)
